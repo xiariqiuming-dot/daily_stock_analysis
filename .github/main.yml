@@ -1,0 +1,37 @@
+name: 股票分析报告
+
+on:
+  # 每天北京时间 14:30 自动运行（A股盘中）
+  schedule:
+    - cron: '30 6 * * 1-5'  # UTC 6:30 = 北京 14:30，周一到周五
+  # 也可以手动触发
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安装依赖
+        run: |
+          pip install akshare requests
+
+      - name: 运行股票分析脚本
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          LLM_API_URL: ${{ secrets.LLM_API_URL }}
+          STOCK_LIST: ${{ secrets.STOCK_LIST }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+        run: python stock_analysis.py
