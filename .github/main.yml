@@ -1,4 +1,4 @@
-name: 股票分析报告
+name: STOCKS IN A MARKET
 
 on:
   # 每天北京时间 14:30 自动运行（A股盘中）
